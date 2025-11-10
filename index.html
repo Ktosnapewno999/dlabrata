@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeria — Dostęp po haśle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.5s ease-in-out;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
+      animation: fadeIn 1.2s ease;
+    }
+    input {
+      padding: 10px 15px;
+      font-size: 1.1em;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffffff33;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #ffffff55;
+    }
+    .gallery {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      width: 90%;
+      max-width: 900px;
+      margin-top: 30px;
+      animation: fadeIn 1s ease;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Podaj hasło, by wejść</h1>
+  <input type="password" id="password" placeholder="Hasło..." />
+  <button onclick="checkPassword()">Zatwierdź</button>
+
+  <div class="gallery" id="gallery">
+    <!-- zdjęcia z folderu /images -->
+    <img src="images/1.jpg" alt="zdjęcie 1" />
+    <img src="images/2.jpg" alt="zdjęcie 2" />
+    <img src="images/3.jpg" alt="zdjęcie 3" />
+    <img src="images/4.jpg" alt="zdjęcie 4" />
+    <img src="images/5.jpg" alt="zdjęcie 5" />
+  </div>
+
+  <script>
+    const correctPassword = "tajnehaslo"; // 🔒 Zmień na swoje
+
+    function checkPassword() {
+      const input = document.getElementById("password").value.trim();
+      if (input === correctPassword) {
+        document.querySelector("h1").textContent = "Witaj w galerii!";
+        document.getElementById("password").style.display = "none";
+        document.querySelector("button").style.display = "none";
+        document.getElementById("gallery").style.display = "grid";
+        document.body.style.background = "linear-gradient(135deg, #43cea2, #185a9d)";
+      } else {
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+      }
+    }
+  </script>
+</body>
+</html>
