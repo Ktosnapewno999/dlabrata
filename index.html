@@ -16,12 +16,16 @@
       height: 100vh;
       margin: 0;
       transition: background 0.5s ease-in-out;
+      overflow: hidden;
     }
+
     h1 {
       margin-bottom: 20px;
       font-size: 2em;
       animation: fadeIn 1.2s ease;
+      text-align: center;
     }
+
     input {
       padding: 10px 15px;
       font-size: 1.1em;
@@ -29,6 +33,7 @@
       border: none;
       outline: none;
     }
+
     button {
       margin-top: 10px;
       padding: 10px 20px;
@@ -40,9 +45,30 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
+
     button:hover {
       background-color: #ffffff55;
     }
+
+    .message {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.15);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 1.1em;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .show {
+      opacity: 1;
+    }
+
     .gallery {
       display: none;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -52,14 +78,27 @@
       margin-top: 30px;
       animation: fadeIn 1s ease;
     }
+
     .gallery img {
       width: 100%;
       border-radius: 12px;
       transition: transform 0.3s ease;
     }
+
     .gallery img:hover {
       transform: scale(1.05);
     }
+
+    iframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      z-index: -1; /* tło za napisem */
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -71,8 +110,9 @@
   <input type="password" id="password" placeholder="Hasło..." />
   <button onclick="checkPassword()">Zatwierdź</button>
 
+  <div class="message" id="message">Ups! To hasło nie pasuje 😅 Spróbuj jeszcze raz…</div>
+
   <div class="gallery" id="gallery">
-    <!-- zdjęcia z folderu /images -->
     <img src="images/1.jpg" alt="zdjęcie 1" />
     <img src="images/2.jpg" alt="zdjęcie 2" />
     <img src="images/3.jpg" alt="zdjęcie 3" />
@@ -85,14 +125,27 @@
 
     function checkPassword() {
       const input = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+
       if (input === correctPassword) {
         document.querySelector("h1").textContent = "Witaj w galerii!";
         document.getElementById("password").style.display = "none";
         document.querySelector("button").style.display = "none";
+        message.style.display = "none";
         document.getElementById("gallery").style.display = "grid";
         document.body.style.background = "linear-gradient(135deg, #43cea2, #185a9d)";
       } else {
-        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        // pokaż komunikat
+        message.classList.add("show");
+
+        // dodaj Rickroll jako tło
+        if (!document.getElementById("rickframe")) {
+          const frame = document.createElement("iframe");
+          frame.id = "rickframe";
+          frame.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&modestbranding=1&controls=0";
+          frame.allow = "autoplay; encrypted-media";
+          document.body.appendChild(frame);
+        }
       }
     }
   </script>
