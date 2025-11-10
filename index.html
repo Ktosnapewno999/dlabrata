@@ -100,6 +100,22 @@
       display: none;
     }
 
+    #sound-warning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 1.3em;
+      text-align: center;
+      z-index: 1000;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -107,6 +123,12 @@
   </style>
 </head>
 <body>
+  <div id="sound-warning">
+    🎧 <br> Włącz dźwięk, zanim wejdziesz! <br> Ta strona wymaga audio 🙂
+    <br><br>
+    <button onclick="checkSound()">Sprawdź ponownie 🔊</button>
+  </div>
+
   <video id="rickvid" src="rickroll.mp4" autoplay muted loop></video>
 
   <h1>Podaj hasło, by wejść</h1>
@@ -124,13 +146,32 @@
   </div>
 
   <script>
-    const correctPassword = "tajnehaslo"; // 🔒 zmień na własne hasło
+    const correctPassword = "tajnehaslo"; // 🔒 zmień na własne
     const msg = document.getElementById("message");
     const video = document.getElementById("rickvid");
 
+    async function checkSound() {
+      try {
+        // testowy dźwięk (cichy sygnał)
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.001; // prawie niesłyszalny
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + 0.1);
+        await ctx.resume();
+
+        // jeśli działa, ukryj ekran ostrzegawczy
+        document.getElementById("sound-warning").style.display = "none";
+      } catch (e) {
+        alert("Nie udało się wykryć dźwięku. Włącz audio i spróbuj ponownie 🎧");
+      }
+    }
+
     function checkPassword() {
       const input = document.getElementById("password").value.trim();
-
       if (input === correctPassword) {
         document.querySelector("h1").textContent = "Witaj w galerii!";
         document.getElementById("password").style.display = "none";
@@ -146,6 +187,20 @@
         video.play().catch(() => {});
       }
     }
+
+    // sprawdzenie dźwięku przy starcie
+    window.addEventListener("load", () => {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === "suspended") {
+          // wymaga interakcji użytkownika
+        } else {
+          document.getElementById("sound-warning").style.display = "none";
+        }
+      } catch {
+        document.getElementById("sound-warning").style.display = "flex";
+      }
+    });
   </script>
 </body>
 </html>
