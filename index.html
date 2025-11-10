@@ -15,15 +15,15 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
-      transition: background 0.5s ease-in-out;
       overflow: hidden;
+      transition: background 0.5s ease-in-out;
     }
 
     h1 {
       margin-bottom: 20px;
       font-size: 2em;
-      animation: fadeIn 1.2s ease;
       text-align: center;
+      animation: fadeIn 1s ease;
     }
 
     input {
@@ -89,14 +89,15 @@
       transform: scale(1.05);
     }
 
-    iframe {
+    video#rickvid {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      border: none;
-      z-index: -1; /* tło za napisem */
+      object-fit: cover;
+      z-index: -1;
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -106,6 +107,8 @@
   </style>
 </head>
 <body>
+  <video id="rickvid" src="rickroll.mp4" autoplay muted loop></video>
+
   <h1>Podaj hasło, by wejść</h1>
   <input type="password" id="password" placeholder="Hasło..." />
   <button onclick="checkPassword()">Zatwierdź</button>
@@ -121,31 +124,26 @@
   </div>
 
   <script>
-    const correctPassword = "tajnehaslo"; // 🔒 Zmień na swoje
+    const correctPassword = "tajnehaslo"; // 🔒 zmień na własne hasło
+    const msg = document.getElementById("message");
+    const video = document.getElementById("rickvid");
 
     function checkPassword() {
       const input = document.getElementById("password").value.trim();
-      const message = document.getElementById("message");
 
       if (input === correctPassword) {
         document.querySelector("h1").textContent = "Witaj w galerii!";
         document.getElementById("password").style.display = "none";
         document.querySelector("button").style.display = "none";
-        message.style.display = "none";
+        msg.style.display = "none";
         document.getElementById("gallery").style.display = "grid";
+        video.style.display = "none";
         document.body.style.background = "linear-gradient(135deg, #43cea2, #185a9d)";
       } else {
-        // pokaż komunikat
-        message.classList.add("show");
-
-        // dodaj Rickroll jako tło
-        if (!document.getElementById("rickframe")) {
-          const frame = document.createElement("iframe");
-          frame.id = "rickframe";
-          frame.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&modestbranding=1&controls=0";
-          frame.allow = "autoplay; encrypted-media";
-          document.body.appendChild(frame);
-        }
+        msg.classList.add("show");
+        video.style.display = "block";
+        video.muted = false;
+        video.play().catch(() => {});
       }
     }
   </script>
