@@ -1,196 +1,27 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CZĘŚC ZADANIA</title>
-<style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  height: 200vh; /* wysokość dla przewijania w dół */
-  width: 200vw;  /* szerokość dla przewijania w lewo */
-  margin: 0;
-  overflow-x: auto;
-  overflow-y: auto;
-}
-
-.center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-}
-
-h1 {
-  margin-bottom: 20px;
-  font-size: 2em;
-  text-align: center;
-}
-
-input, button {
-  padding: 10px 15px;
-  font-size: 1.1em;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
-
-button {
-  margin-top: 10px;
-  background-color: #ffffff33;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover { background-color: #ffffff55; }
-
-/* komunikat o złym haśle */
-.message {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0,0,0,0.5);
-  padding: 10px 0;
-  text-align: center;
-  font-size: 1.5em;
-  display: none;
-  z-index: 10;
-}
-
-/* tekst pojawiający się po przewinięciu w lewo - duży i środek */
-.base64-large {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 6em;
-  font-weight: bold;
-  color: #ffdd57;
-  display: none;
-  text-align: center;
-  white-space: nowrap;
-  z-index: 9;
-}
-
-/* tekst po przewinięciu w dół */
-.base64-top {
-  position: fixed;
-  top: 60px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 2em;
-  color: #ffdd57;
-  display: none;
-  z-index: 9;
-}
-
-.gallery {
-  display: none;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  width: 90%;
-  max-width: 900px;
-  margin-top: 30px;
-}
-
-.gallery img {
-  width: 100%;
-  border-radius: 12px;
-  transition: 0.3s;
-}
-.gallery img:hover { transform: scale(1.05); }
-
-video#rickvid {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  z-index: -1;
-  display: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Koło losujące – PREZENT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+        }
+    </style>
 </head>
 <body>
-
-<!-- komunikaty -->
-<div class="message" id="message">Ups! Niepoprawne hasło 😅 — Spróbuj ponownie!</div>
-<div class="base64-large" id="base64-large">ZAKODOWANE Z UŻYCIEM BASE64</div>
-<div class="base64-top" id="base64-top">S0lCRUwgQUxFIE5JRSBQT1dJRU0gS1TDk1JZIFNaVUtBSiBLT0RVIFFS</div>
-
-<video id="rickvid" src="rickroll.mp4" autoplay muted loop></video>
-
-<!-- widok główny -->
-<div class="center" id="main">
-  <h1>Podaj hasło, by wejść</h1>
-  <input type="password" id="password" placeholder="Hasło...">
-  <button onclick="checkPassword()">Zatwierdź</button>
-</div>
-
-<!-- galeria -->
-<div class="center">
-  <div class="gallery" id="gallery">
-    <img src="images/1.jpg" alt="zdjęcie 1">
-    <img src="images/2.jpg" alt="zdjęcie 2">
-    <img src="images/3.jpg" alt="zdjęcie 3">
-    <img src="images/4.jpg" alt="zdjęcie 4">
-    <img src="images/5.jpg" alt="zdjęcie 5">
-  </div>
-</div>
-
-<script>
-const correctPassword = "tajnehaslo";
-const messageDiv = document.getElementById("message");
-const base64Large = document.getElementById("base64-large");
-const base64Top = document.getElementById("base64-top");
-const video = document.getElementById("rickvid");
-
-// blokada dla urządzeń mobilnych
-if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-  document.body.innerHTML = "<h1>Strona dostępna tylko na komputerze 😅</h1>";
-}
-
-// logika hasła
-function checkPassword() {
-  const input = document.getElementById("password").value.trim();
-  if (input === correctPassword) {
-    document.getElementById("main").innerHTML = "<h1>Witaj w galerii!</h1>";
-    document.getElementById("gallery").style.display = "grid";
-    video.style.display = "none";
-    messageDiv.style.display = "none";
-    base64Large.style.display = "none";
-    base64Top.style.display = "none";
-    document.body.style.background = "linear-gradient(135deg, #43cea2, #185a9d)";
-  } else {
-    messageDiv.style.display = "block";
-    video.style.display = "block";
-    video.muted = false;
-    video.play().catch(()=>{});
-  }
-}
-
-// pokazywanie dużego tekstu po przewinięciu w lewo
-window.addEventListener("scroll", () => {
-  if (window.scrollX > 50) {
-    base64Large.style.display = "block";
-  } else {
-    base64Large.style.display = "none";
-  }
-
-  if (window.scrollY > 50) {
-    base64Top.style.display = "block";
-  } else {
-    base64Top.style.display = "none";
-  }
-});
-</script>
-
+    <iframe
+        src="https://wheeldecide.com/e.php?c1=MALUTKI&c2=MA%C5%81Y&c3=%C5%9AREDNI&c4=DU%C5%BBY&c5=BARDZO+DU%C5%BBY&c6=OLB%C5%BBYMI&c7=CA%C5%81Y+SZARY+FILAMENT+KT%C3%93RY+POSIADAM&col=gbblackp&t=PREZENT&time=180"
+        width="500"
+        height="500"
+        scrolling="no"
+        frameborder="0">
+    </iframe>
 </body>
 </html>
